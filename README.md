@@ -1,6 +1,6 @@
 ## Demo
 
-[The Books Tool](https://aubergine-rinotova.vercel.app/)
+[The Books Tool](https://the-books-tool.vercel.app/)
 
 # The Books Tool - a tool for books
 
