@@ -90,6 +90,7 @@ export default function Home() {
           data={books || []}
           searchTerm={searchTerm}
           onSearch={onSearchHandler}
+          isLoading={!data && isFetching}
         />
       </div>
     </main>

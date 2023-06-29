@@ -17,12 +17,14 @@ import {
 } from '@/components/ui/table';
 import { useState } from 'react';
 import { Input } from '../ui/input';
+import { LoadingSpinner } from '../Spinner';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   searchTerm: string;
   onSearch: (searchTerm: string) => void;
+  isLoading: boolean;
 }
 
 function BooksTable<TData, TValue>({
@@ -30,6 +32,7 @@ function BooksTable<TData, TValue>({
   data,
   searchTerm,
   onSearch,
+  isLoading,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
@@ -108,7 +111,13 @@ function BooksTable<TData, TValue>({
                   colSpan={columns.length}
                   className='h-24 text-center'
                 >
-                  No results.
+                  {isLoading ? (
+                    <div className='flex items-center justify-center'>
+                      <LoadingSpinner size={50} />
+                    </div>
+                  ) : (
+                    <p>No results.</p>
+                  )}
                 </TableCell>
               </TableRow>
             )}
