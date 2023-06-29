@@ -32,21 +32,6 @@ export default function Home() {
     return () => clearTimeout(delayInputTimeoutId);
   }, [searchTerm]);
 
-  if (!data && isFetching) {
-    return (
-      <div className='flex min-h-screen max-w-screen flex-col items-center p-4 font-mono'>
-        <h1 className='text-green-500 text-2xl md:text-5xl tracking-widest mb-6 underline underline-offset-8'>
-          The Books Tool
-        </h1>
-
-        <div className='flex gap-2 items-center justify-center'>
-          <LoadingSpinner size={30} />
-          <p>Loading books, please wait...</p>
-        </div>
-      </div>
-    );
-  }
-
   if (data?.next && !debouncedsearchTerm) {
     void queryClient.prefetchQuery({
       queryKey: ['booksQuery', page + 1],
@@ -63,47 +48,49 @@ export default function Home() {
         <h1 className='text-green-500 text-2xl md:text-5xl tracking-widest mb-6 underline underline-offset-8'>
           The Books Tool
         </h1>
-        {books && books.length > 0 ? (
-          <>
-            <div className='w-full mb-2 flex gap-2 items-center'>
-              <Button
-                variant='secondary'
-                onClick={() => setPage((old) => Math.max(old - 1, 0))}
-                disabled={!!debouncedsearchTerm || page === 1}
-              >
-                Previous
-              </Button>
 
-              <Button
-                variant='secondary'
-                onClick={() => {
-                  if (!isPreviousData && data?.next) {
-                    setPage((old) => old + 1);
-                  }
-                }}
-                // Disable the Next Page button until we know a next page is available
-                disabled={
-                  !!debouncedsearchTerm || isPreviousData || !data?.next
-                }
-              >
-                Next
-              </Button>
-              {isFetching && isPreviousData ? (
-                <div className='flex gap-2 items-center justify-center'>
-                  <LoadingSpinner size={30} />
-                  <p>Loading books, please wait...</p>
-                </div>
-              ) : null}
-            </div>
-
-            <BooksTable
-              columns={columns}
-              data={books}
-              searchTerm={searchTerm}
-              onSearch={onSearchHandler}
-            />
-          </>
+        {!data && isFetching ? (
+          <div className='flex gap-2 items-center justify-center'>
+            <LoadingSpinner size={30} />
+            <p>Loading books, please wait...</p>
+          </div>
         ) : null}
+
+        <div className='w-full mb-2 flex gap-2 items-center'>
+          <Button
+            variant='secondary'
+            onClick={() => setPage((old) => Math.max(old - 1, 0))}
+            disabled={!!debouncedsearchTerm || page === 1}
+          >
+            Previous
+          </Button>
+
+          <Button
+            variant='secondary'
+            onClick={() => {
+              if (!isPreviousData && data?.next) {
+                setPage((old) => old + 1);
+              }
+            }}
+            // Disable the Next Page button until we know a next page is available
+            disabled={!!debouncedsearchTerm || isPreviousData || !data?.next}
+          >
+            Next
+          </Button>
+          {isFetching && isPreviousData ? (
+            <div className='flex gap-2 items-center justify-center'>
+              <LoadingSpinner size={30} />
+              <p>Loading books, please wait...</p>
+            </div>
+          ) : null}
+        </div>
+
+        <BooksTable
+          columns={columns}
+          data={books || []}
+          searchTerm={searchTerm}
+          onSearch={onSearchHandler}
+        />
       </div>
     </main>
   );
